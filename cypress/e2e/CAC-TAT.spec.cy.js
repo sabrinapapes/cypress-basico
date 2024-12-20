@@ -165,7 +165,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
   it('Acessa Politica de Privacidade removendo o target', function(){
     cy.get('a').invoke('removeAttr', 'target').click()
-    cy.url().should('include', 'privacy.html')
+    cy.url().should('include', 'privaci.html')
     cy.title().should('eq', 'Central de Atendimento ao Cliente TAT - Política de privacidade')
   })
 })
