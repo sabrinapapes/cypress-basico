@@ -10,6 +10,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
   })
 
   it('Campos obrigatorios e mensagem sucesso', function() {
+    cy.clock()
     cy.get('#firstName').type('Sabrina')
     cy.get('input[name="lastName"]').type('Papes')
     cy.get('input[type="email"]').type('qapapes@gmail.com')
@@ -167,5 +168,47 @@ describe('Central de Atendimento ao Cliente TAT', function() {
     cy.get('a').invoke('removeAttr', 'target').click()
     cy.url().should('include', 'privacy.html')
     cy.title().should('eq', 'Central de Atendimento ao Cliente TAT - Política de privacidade')
+  })
+
+  it('Exibe e esconde mensagens de sucesso e erro', function(){
+    cy.get('input[name="firstName"]').type('Sabrina')
+    cy.get('input[name="lastName"]').type('Papes')
+    cy.get('input[type="email"]').type('qapapescom')
+    cy.get('textarea[name="open-text-area"]').type('MMentoria Cypress')
+
+    cy.get('button[type="submit"]').click()
+
+    cy.get('.error')
+      .should('be.visible')
+      .and('contain', 'Valide os campos obrigatórios!')
+      .invoke('hide')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+
+  })
+
+  it('preenche area de texto usando invoke', function(){
+    const longText = Cypress._.repeat('testetestetetets', 20)
+
+    cy.get('#open-text-area')
+      .invoke('val', longText)
+      .should('have.value', longText)
+  })
+
+  it('desafio encontre o gato', function(){
+    cy.get('span[id="cat"]')
+      .invoke('show')
+      .should('be.visible')
+  })
+
+  it.only('Faz uma requisicao HTTP', function(){
+    cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+      .should(function(response){
+        const { status, statusText, body } = response
+        expect(status).to.equal(200)
+        expect(statusText).to.equal('OK')
+        expect(body).to.include('CAC TAT')
+      })
   })
 })
